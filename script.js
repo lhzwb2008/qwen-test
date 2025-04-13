@@ -207,9 +207,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // Get a reader from the response body
       const reader = response.body.getReader();
       
-      // Create a variable to store the accumulated content
+      // Create variables to store the accumulated content
       let fullContent = '';
+      let fullReasoningContent = '';
       let buffer = '';
+      let hasReceivedAnyContent = false;
       
       // Add a debug element to show raw content (hidden in production)
       const debugElement = document.createElement('div');
@@ -285,6 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
               
               // Process content if we have either type
               if (content || reasoningContent) {
+                // Mark that we've received some content
+                hasReceivedAnyContent = true;
                 // Create separate sections for reasoning and final answer
                 if (!responseContent.querySelector('.reasoning-section')) {
                   // Create sections if they don't exist
@@ -332,6 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Update the appropriate section
                 if (reasoningContent) {
                   // Add to reasoning content
+                  fullReasoningContent += reasoningContent;
                   const formattedReasoning = reasoningContent
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                     .replace(/\n/g, '<br>');
@@ -388,9 +393,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
       
-      // If we didn't get any content, show an error
-      if (!fullContent) {
+      // Debug output to help diagnose the issue
+      console.log('Content tracking status:', {
+        hasReceivedAnyContent,
+        fullContentLength: fullContent.length,
+        fullReasoningContentLength: fullReasoningContent.length,
+        responseContentHTML: responseContent.innerHTML
+      });
+      
+      // Check if we have any visible content in the response area
+      const hasVisibleContent = responseContent.textContent.trim().length > 0;
+      console.log('Has visible content:', hasVisibleContent);
+      
+      // Only show error if we truly have no content
+      if (!hasVisibleContent && !hasReceivedAnyContent && !fullContent && !fullReasoningContent) {
         showError('未收到任何回答内容，请重试');
+      } else {
+        // Make sure error is hidden if we have content
+        errorMessage.style.display = 'none';
       }
     } catch (error) {
       console.error('Error handling stream:', error);
