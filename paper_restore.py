@@ -6,7 +6,7 @@ import argparse
 from pathlib import Path
 
 # 内置的AppCode（请替换为你的实际AppCode）
-APP_CODE = '436f05e3e86347468a7fc7df27696c44'
+APP_CODE = 'c8e16e32757e486bbdd0bcaeb3ee352d'
 
 def restore_exam_paper(image_path, output_dir="output"):
     """
