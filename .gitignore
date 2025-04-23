@@ -1,18 +1,1 @@
-# Configuration files with sensitive information
-.config
-
-# Node modules
-node_modules/
-
-# Environment variables
-.env
-
-# OS specific files
-.DS_Store
-Thumbs.db
-
-# Editor directories and files
-.idea/
-.vscode/
-*.swp
-*.swo
+output
